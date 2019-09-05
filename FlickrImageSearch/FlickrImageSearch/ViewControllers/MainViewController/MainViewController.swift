@@ -16,9 +16,13 @@ class MainViewController: UIViewController {
         // Move all the initialization in router
         let webServiceProvider = ImageLoaderWebService(apiClient: APIClient())
         let imageLoader = ImageLoader(imageLoaderWebServiceProvider: webServiceProvider)
+
+        let interactor = ImageSearchViewControllerInteractor(imageLoader: imageLoader)
+        let presenter = ImageSearchViewControllerPresenter(interactor: interactor)
+
         let dataSource = ImageSearchCollectionViewDataSource()
 
-        let searchViewController = ImageSearchViewController(imageLoader: imageLoader, dataSource: dataSource)
+        let searchViewController = ImageSearchViewController(presenter: presenter, dataSource: dataSource)
         present(searchViewController, animated: false, completion: nil)
     }
 }

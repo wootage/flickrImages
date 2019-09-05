@@ -20,14 +20,16 @@ class ImageSearchViewController: UIViewController {
 
     // MARK: - Properties - Dependancy
     private var dataSource: ImageSearchCollectionViewDataSource
-    private var imageLoader: ImageLoader
+    private var presenter: ImageSearchViewControllerPresenterProtocol
 
     // MARK: - Init
-    init(imageLoader: ImageLoader, dataSource: ImageSearchCollectionViewDataSource) {
-        self.imageLoader = imageLoader
+    init(presenter: ImageSearchViewControllerPresenterProtocol, dataSource: ImageSearchCollectionViewDataSource) {
+        self.presenter = presenter
         self.dataSource = dataSource
 
         super.init(nibName: nil, bundle: nil)
+
+        self.presenter.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -46,31 +48,14 @@ class ImageSearchViewController: UIViewController {
         collectionView.dataSource = dataSource
         collectionView.delegate = self
     }
+}
 
-    // MARK: - Search loading
-    private func newSearch(_ searchText: String) {
+extension ImageSearchViewController: ImageSearchViewControllerPresenterDelegate {
 
-        // Reset the model state
-        // TODO: bind the reloading with the view models
-        dataSource.viewModels = []
+    func didLoadNewData(flickrImages: [FlickrImageViewModel]) {
+
+        dataSource.viewModels.append(contentsOf: flickrImages)
         collectionView.reloadData()
-
-        imageLoader.newSearch(searchText) { [weak self] viewModels in
-
-            guard let self = self else { return }
-
-            self.dataSource.viewModels = viewModels
-            self.collectionView.reloadData()
-        }
-    }
-
-    private func loadNextPage() {
-        imageLoader.loadNextPage { viewModels in
-            self.dataSource.viewModels.append(contentsOf: viewModels)
-
-            //TODO: Load only the new images instead of reloading the whole collection view
-            self.collectionView.reloadData()
-        }
     }
 }
 
@@ -81,7 +66,12 @@ extension ImageSearchViewController: UISearchBarDelegate {
         guard let searchText = searchBar.text, !searchText.isEmpty else { return }
 
         searchBar.resignFirstResponder()
-        newSearch(searchText)
+
+        // Reset the model state
+        dataSource.viewModels = []
+        collectionView.reloadData()
+
+        presenter.newSearch(text: searchText)
     }
 }
 
@@ -103,7 +93,7 @@ extension ImageSearchViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if (indexPath.row == dataSource.viewModels.count - 1 ) {
-            loadNextPage()
+            presenter.loadNextPage()
         }
     }
 }
