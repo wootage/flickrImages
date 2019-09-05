@@ -8,6 +8,13 @@
 
 import Foundation
 
+/**
+Should interact with the `interactor` and the view
+
+ * tells interactor to load
+ * tells the view to display
+
+ */
 protocol ImageSearchViewControllerPresenterProtocol {
     var delegate: ImageSearchViewControllerPresenterDelegate? { get set }
 
@@ -21,16 +28,20 @@ protocol ImageSearchViewControllerPresenterDelegate: class {
 
 class ImageSearchViewControllerPresenter: ImageSearchViewControllerPresenterProtocol {
 
+    // MARK: - Properties - Dependancy
     private var interactor: ImageSearchViewControllerInteractorProtocol
 
+    // MARK: - Properties - Delegates
     weak var delegate: ImageSearchViewControllerPresenterDelegate?
 
+    // MARK: - Init
     init(interactor: ImageSearchViewControllerInteractorProtocol) {
         self.interactor = interactor
 
         self.interactor.delegate = self
     }
 
+    // MARK: - Public
     func newSearch(text: String) {
         interactor.newSearch(text)
     }
@@ -40,6 +51,7 @@ class ImageSearchViewControllerPresenter: ImageSearchViewControllerPresenterProt
     }
 }
 
+// MARK: - ImageSearchViewControllerInteractorDelegate
 extension ImageSearchViewControllerPresenter: ImageSearchViewControllerInteractorDelegate {
     func didLoad(newImageData: [FlickrImage]) {
 

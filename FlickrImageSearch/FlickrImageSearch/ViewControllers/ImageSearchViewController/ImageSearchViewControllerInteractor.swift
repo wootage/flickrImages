@@ -8,6 +8,13 @@
 
 import Foundation
 
+/**
+ Should interact with the `presenter` and the image loader
+
+ * Communicate with the image loader to load the pages
+ * Update presenter's models
+ * Count pages
+ */
 protocol ImageSearchViewControllerInteractorProtocol {
     var delegate: ImageSearchViewControllerInteractorDelegate? { get set }
 
@@ -32,8 +39,10 @@ class ImageSearchViewControllerInteractor: ImageSearchViewControllerInteractorPr
         return totalItems < currentPage * pageSize
     }
 
+    // MARK: - Properties - Dependancy
     private var imageLoader: ImageLoader
 
+    // MARK: - Properties - Delegates
     weak var delegate: ImageSearchViewControllerInteractorDelegate?
 
     // MARK: - Init
@@ -58,6 +67,7 @@ class ImageSearchViewControllerInteractor: ImageSearchViewControllerInteractorPr
         loadImages(text: searchText, page: currentPage + 1)
     }
 
+    // MARK: - Misc. - Private
     private func loadImages(text: String, page: Int) {
 
         imageLoader.getImageData(text, page: page) { [weak self] photosResponse in

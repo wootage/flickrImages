@@ -16,6 +16,7 @@ class ImageLoaderWebService: ImageLoaderWebServiceProtocol {
         self.apiClient = apiClient
     }
 
+    // MARK: - Public
     func getImages(searchText: String, page: Int, completion: @escaping ((PhotosResponse) -> Void)) {
         let method = FlickrAPIMethods.search(searchText, page)
 

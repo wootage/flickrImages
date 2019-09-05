@@ -24,6 +24,11 @@ class ImageSearchCollectionViewDataSource: NSObject, UICollectionViewDataSource 
 
         let currentModel = viewModels[indexPath.row]
 
+        /** Known issue:
+         If the cell is reused before the image loads it flickrs
+         A queue should be created to load the images and cancel request for cells that will be reused
+         Optional: Prefetch should be used
+         */
         cell.imageView.loadImage(stringURL: currentModel.imageStringURL)
 
         return cell

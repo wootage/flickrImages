@@ -12,6 +12,10 @@ class FlickrImageCollectionViewCell: UICollectionViewCell, ReusableView {
 
     @IBOutlet weak var imageView: UIImageView!
 
+    /**
+     TODO: Add cell states:
+     Loading/Loaded/error
+     */
     override func prepareForReuse() {
         super.prepareForReuse()
 

@@ -8,6 +8,9 @@
 
 import Foundation
 
+/**
+Load image response from a service
+ */
 class ImageLoader {
 
     typealias ImagesResponseHandler = (PhotosResponse) -> Void

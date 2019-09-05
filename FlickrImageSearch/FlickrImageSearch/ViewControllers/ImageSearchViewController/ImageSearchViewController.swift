@@ -50,6 +50,7 @@ class ImageSearchViewController: UIViewController {
     }
 }
 
+// MARK: - ImageSearchViewControllerPresenterDelegate
 extension ImageSearchViewController: ImageSearchViewControllerPresenterDelegate {
 
     func didLoadNewData(flickrImages: [FlickrImageViewModel]) {
