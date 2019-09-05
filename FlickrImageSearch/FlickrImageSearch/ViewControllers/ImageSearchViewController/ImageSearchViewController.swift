@@ -92,7 +92,7 @@ extension ImageSearchViewController: UICollectionViewDelegateFlowLayout {
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if (indexPath.row == dataSource.viewModels.count - 1 ) {
+        if (indexPath.row == dataSource.viewModels.count - 1) {
             presenter.loadNextPage()
         }
     }

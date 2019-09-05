@@ -14,4 +14,8 @@ struct PhotosResponse: Codable {
     let perpage: Int
     let total: String
     let photo: [FlickrImage]
+
+    var totalItems: Int {
+        return Int(total) ?? 0
+    }
 }

@@ -20,7 +20,13 @@ class ImageSearchViewControllerInteractor: ImageSearchViewControllerInteractorPr
     // MARK: - Properties - Private
     private var currentPage: Int = 1
     private var availablePages: Int = 0
+    private var pageSize: Int = 0
+    private var totalItems: Int = 0
     private var searchText: String = ""
+
+    private var shouldLoadNext: Bool {
+        return totalItems < currentPage * pageSize
+    }
 
     private var imageLoader: ImageLoader
 
@@ -41,16 +47,21 @@ class ImageSearchViewControllerInteractor: ImageSearchViewControllerInteractorPr
 
     func loadNextPage(completion: @escaping FlickrImageResponseHandler) {
 
+        guard !shouldLoadNext else { return }
+
         loadImages(text: searchText, page: currentPage + 1, completion: completion)
     }
 
     private func loadImages(text: String, page: Int, completion: @escaping FlickrImageResponseHandler) {
+
         imageLoader.getImageData(text, page: page) { [weak self] photosResponse in
 
             guard let self = self else { return }
 
             self.currentPage = photosResponse.page
             self.availablePages = photosResponse.pages
+            self.pageSize = photosResponse.perpage
+            self.totalItems = photosResponse.totalItems
 
             completion(photosResponse.photo)
         }
