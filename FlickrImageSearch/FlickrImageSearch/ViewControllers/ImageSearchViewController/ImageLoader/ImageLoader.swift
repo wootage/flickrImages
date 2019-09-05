@@ -8,12 +8,16 @@
 
 import Foundation
 
+typealias ImagesResponseHandler = (PhotosResponse) -> Void
+
+protocol ImageLoaderProtocol {
+    func getImageData(_ searchText: String, page: Int, completion: @escaping ImagesResponseHandler)
+}
+
 /**
 Load image response from a service
  */
-class ImageLoader {
-
-    typealias ImagesResponseHandler = (PhotosResponse) -> Void
+class ImageLoader: ImageLoaderProtocol {
 
     // MARK: - Properties - Dependancy
     private var imageLoaderWebServiceProvider: ImageLoaderWebServiceProtocol

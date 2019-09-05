@@ -40,13 +40,13 @@ class ImageSearchViewControllerInteractor: ImageSearchViewControllerInteractorPr
     }
 
     // MARK: - Properties - Dependancy
-    private var imageLoader: ImageLoader
+    private var imageLoader: ImageLoaderProtocol
 
     // MARK: - Properties - Delegates
     weak var delegate: ImageSearchViewControllerInteractorDelegate?
 
     // MARK: - Init
-    init(imageLoader: ImageLoader) {
+    init(imageLoader: ImageLoaderProtocol) {
         self.imageLoader = imageLoader
     }
 

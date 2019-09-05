@@ -15,7 +15,7 @@ Should interact with the `interactor` and the view
  * tells the view to display
 
  */
-protocol ImageSearchViewControllerPresenterProtocol {
+protocol ImageSearchViewControllerPresenterProtocol: ImageSearchViewControllerInteractorDelegate {
     var delegate: ImageSearchViewControllerPresenterDelegate? { get set }
 
     func newSearch(text: String)
@@ -52,7 +52,7 @@ class ImageSearchViewControllerPresenter: ImageSearchViewControllerPresenterProt
 }
 
 // MARK: - ImageSearchViewControllerInteractorDelegate
-extension ImageSearchViewControllerPresenter: ImageSearchViewControllerInteractorDelegate {
+extension ImageSearchViewControllerPresenter {
     func didLoad(newImageData: [FlickrImage]) {
 
         let viewModels = newImageData.map { FlickrImageViewModel($0) }
