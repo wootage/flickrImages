@@ -25,23 +25,25 @@ class ImageSearchViewControllerPresenter: ImageSearchViewControllerPresenterProt
 
     weak var delegate: ImageSearchViewControllerPresenterDelegate?
 
-    private lazy var flickrImageResponseHandler: FlickrImageResponseHandler = { [weak self] images in
-
-        guard let self = self else { return }
-
-        let viewModels = images.map { FlickrImageViewModel($0) }
-        self.delegate?.didLoadNewData(flickrImages: viewModels)
-    }
-
     init(interactor: ImageSearchViewControllerInteractorProtocol) {
         self.interactor = interactor
+
+        self.interactor.delegate = self
     }
 
     func newSearch(text: String) {
-        interactor.newSearch(text, completion: flickrImageResponseHandler)
+        interactor.newSearch(text)
     }
 
     func loadNextPage() {
-        interactor.loadNextPage(completion: flickrImageResponseHandler)
+        interactor.loadNextPage()
+    }
+}
+
+extension ImageSearchViewControllerPresenter: ImageSearchViewControllerInteractorDelegate {
+    func didLoad(newImageData: [FlickrImage]) {
+
+        let viewModels = newImageData.map { FlickrImageViewModel($0) }
+        self.delegate?.didLoadNewData(flickrImages: viewModels)
     }
 }

@@ -8,11 +8,15 @@
 
 import Foundation
 
-typealias FlickrImageResponseHandler = ([FlickrImage]) -> Void
-
 protocol ImageSearchViewControllerInteractorProtocol {
-    func newSearch(_ text: String, completion: @escaping FlickrImageResponseHandler)
-    func loadNextPage(completion: @escaping FlickrImageResponseHandler)
+    var delegate: ImageSearchViewControllerInteractorDelegate? { get set }
+
+    func newSearch(_ text: String)
+    func loadNextPage()
+}
+
+protocol ImageSearchViewControllerInteractorDelegate: class {
+    func didLoad(newImageData: [FlickrImage])
 }
 
 class ImageSearchViewControllerInteractor: ImageSearchViewControllerInteractorProtocol {
@@ -30,29 +34,31 @@ class ImageSearchViewControllerInteractor: ImageSearchViewControllerInteractorPr
 
     private var imageLoader: ImageLoader
 
+    weak var delegate: ImageSearchViewControllerInteractorDelegate?
+
     // MARK: - Init
     init(imageLoader: ImageLoader) {
         self.imageLoader = imageLoader
     }
 
     // MARK: - Public
-    func newSearch(_ text: String, completion: @escaping FlickrImageResponseHandler) {
+    func newSearch(_ text: String) {
 
         currentPage = 1
         availablePages = 0
         searchText = text
 
-        loadImages(text: searchText, page: currentPage, completion: completion)
+        loadImages(text: searchText, page: currentPage)
     }
 
-    func loadNextPage(completion: @escaping FlickrImageResponseHandler) {
+    func loadNextPage() {
 
         guard !shouldLoadNext else { return }
 
-        loadImages(text: searchText, page: currentPage + 1, completion: completion)
+        loadImages(text: searchText, page: currentPage + 1)
     }
 
-    private func loadImages(text: String, page: Int, completion: @escaping FlickrImageResponseHandler) {
+    private func loadImages(text: String, page: Int) {
 
         imageLoader.getImageData(text, page: page) { [weak self] photosResponse in
 
@@ -63,7 +69,7 @@ class ImageSearchViewControllerInteractor: ImageSearchViewControllerInteractorPr
             self.pageSize = photosResponse.perpage
             self.totalItems = photosResponse.totalItems
 
-            completion(photosResponse.photo)
+            self.delegate?.didLoad(newImageData: photosResponse.photo)
         }
     }
 }
